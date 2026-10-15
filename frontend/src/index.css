@@ -1,0 +1,21 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap");
+
+@import "tailwindcss";
+
+/* Ensure every UI file is scanned (avoids missing utilities in dev on some setups). */
+@source "../index.html";
+@source "./**/*.jsx";
+@source "./**/*.js";
+
+@plugin "@tailwindcss/forms";
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}

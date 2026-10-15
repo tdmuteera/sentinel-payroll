@@ -1,0 +1,79 @@
+{
+  "name": "back",
+  "version": "1.1.0",
+  "description": "SENTINEL PAY ROLL backend and desktop shell",
+  "main": "electron.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "dev:front": "npm run dev --prefix ../frontend",
+    "start": "node server.js",
+    "seed": "node src/database/seed.js",
+    "rebuild:sqlite": "npm rebuild better-sqlite3",
+    "electron": "electron electron.js",
+    "electron-dev": "concurrently \"npm run dev\" \"npm run dev:front\" \"wait-on http://127.0.0.1:5000/api/health http://127.0.0.1:5173 && cross-env ELECTRON_USE_EXISTING_SERVER=1 electron electron.js\"",
+    "build-frontend": "cd ../frontend && npm run build && xcopy /E /I /Y dist ..\\backend\\public",
+    "sync-bundled-db": "node scripts/sync-bundled-database.js",
+    "predist": "node scripts/clean-dist-win-unpacked.js",
+    "dist": "npm run build-frontend && npm run sync-bundled-db && cross-env CSC_IDENTITY_AUTO_DISCOVERY=false electron-builder"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "better-sqlite3": "^12.9.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "pdfmake": "^0.3.8"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14",
+    "concurrently": "^9.2.1",
+    "cross-env": "^10.1.0",
+    "electron": "^42.0.1",
+    "electron-builder": "^26.8.1",
+    "wait-on": "^9.0.5"
+  },
+  "build": {
+    "appId": "com.sentinel.payroll",
+    "productName": "SENTINEL PAY ROLL",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "**/*",
+      "!node_modules/.cache",
+      "!dist-exe/**",
+      "!release/**",
+      "assets/sentinel.db"
+    ],
+    "npmRebuild": false,
+    "asarUnpack": [
+      "**/node_modules/better-sqlite3/**/*",
+      "assets/**/*"
+    ],
+    "win": {
+      "signAndEditExecutable": false,
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "assets/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "artifactName": "SentinelPayRoll-Setup-${version}.${ext}"
+    }
+  }
+}
